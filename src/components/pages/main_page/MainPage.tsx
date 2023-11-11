@@ -1,23 +1,31 @@
 // type Props = {}
 import axios from "axios"
+import CoinsTable from "../../CoinsTable"
 
 import { useState, useEffect } from "react"
+import { Box } from "@mui/material"
 
 const API = 'https://api.coincap.io/v2/assets'
 
 
 const MainPage = () => {
-  const [coins, setCoins] = useState({})
+  const [coins, setCoins] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios.get(API)
-      console.log(result.data)
+      const coins = result.data.data
+      console.log(coins)
+      setCoins(coins)
     }
     fetchData()
   }, [])
+
   return (
-    <div>MainPage</div>
+    // dispalyedCoins
+    <Box sx={{width: "70vw"}}>
+      <CoinsTable coins={coins} />
+    </Box>
   )
 }
 
