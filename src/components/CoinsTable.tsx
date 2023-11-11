@@ -28,6 +28,7 @@ interface Data {
   change: number;
   title: string;
   vwap: number;
+  rank: number;
 }
 
 function createData(
@@ -37,6 +38,7 @@ function createData(
   change: number,
   marketCap: number,
   vwap: number,
+  rank: number,
 ): Data {
   return {
     id,
@@ -45,6 +47,7 @@ function createData(
     change,
     marketCap,
     vwap,
+    rank,
   };
 }
 
@@ -267,6 +270,8 @@ export default function EnhancedTable(props: Props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);           // Тимчасово змінив на 25, а було 5
+
+
   const rows = props.coins.map((coin: any) => {
     // console.log(coin)
     if (coin.priceUsd >= 1) {
@@ -279,7 +284,7 @@ export default function EnhancedTable(props: Props) {
     coin.vwap24Hr = parseFloat(coin.vwap24Hr).toFixed(2)
     coin.changePercent24Hr = parseFloat(coin.changePercent24Hr).toFixed(2)
 
-    return createData(coin.rank, coin.name, coin.priceUsd, coin.changePercent24Hr, coin.marketCapUsd, coin.vwap24Hr)
+    return createData(coin.rank, coin.name, coin.priceUsd, coin.changePercent24Hr, coin.marketCapUsd, coin.vwap24Hr, coin.rank)
   })
 
   // const rows = [
