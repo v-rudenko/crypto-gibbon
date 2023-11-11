@@ -1,3 +1,6 @@
+
+//// TODO: Виправити сортування за відсотком зміни ціни.
+
 // type Props = {}
 import axios from "axios"
 import CoinsTable from "../../CoinsTable"
