@@ -3,11 +3,11 @@
 }
 
 .blink_green {
-  animation: blink_green 1s;
-  /* background-color: green; */
+  /* animation: blink_green 1s; */
+  background-color: #6fbf7392;
 }
 
-@keyframes blink_green {
+/* @keyframes blink_green {
   0% {
     background-color: rgb(27, 174, 27);
   }
@@ -17,14 +17,14 @@
   100% {
     background-color: inherit;
   }
-}
+} */
 
 .blink_red {
-  animation: blink_red 1s;
-  /* background-color: red; */
+  /* animation: blink_red 1s; */
+  background-color: #ff456a79;
 }
 
-@keyframes blink_red {
+/* @keyframes blink_red {
   0% {
     background-color: rgba(180, 11, 11);
   }
@@ -34,4 +34,4 @@
   100% {
     background-color: inherit;
   }
-}
+} */

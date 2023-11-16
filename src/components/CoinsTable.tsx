@@ -284,7 +284,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 
 type Props = {
   coins: Array<Object>;
-  oldCoins: Array<Object>;
+  updatedCoins: Array<Object>;
 };
 
 export default function EnhancedTable(props: Props) {
@@ -296,22 +296,9 @@ export default function EnhancedTable(props: Props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(25); // Тимчасово змінив на 25, а було 5
 
 
-  const rows = props.coins.map((coin: any) => {
+  const rows = props.updatedCoins.map((coin: any) => {
 
-    const oldCoin = props.oldCoins.filter((oldCoin: any) => oldCoin.id === coin.id)[0];
 
-    if (oldCoin) {
-      if (parseFloat(oldCoin.priceUsd) < parseFloat(coin.priceUsd)) {
-        // console.log(coin.name + "подорожчав");
-        coin.biggerPrice = true;
-      } else if (parseFloat(oldCoin.priceUsd) > parseFloat(coin.priceUsd)) {
-        coin.biggerPrice = false;
-        coin.smallerPrice = true;
-      } else {
-        coin.biggerPrice = false;
-        coin.smallerPrice = false;
-      }
-    }
     // coin.priceUsd = 1;
 
     // console.log(coin)
@@ -338,6 +325,19 @@ export default function EnhancedTable(props: Props) {
       coin.biggerPrice,
       coin.smallerPrice,
     );
+
+
+    // return createData(
+    //   coin.rank,
+    //   coin.name,
+    //   coin.priceUsd,
+    //   coin.changePercent24Hr,
+    //   coin.marketCapUsd,
+    //   coin.vwap24Hr,
+    //   coin.rank,
+    //   coin.biggerPrice,
+    //   coin.smallerPrice,
+    // );
   });
 
   // console.log(props.coins);
@@ -442,7 +442,7 @@ export default function EnhancedTable(props: Props) {
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: "pointer" }}
-                    className={`${row.biggerPrice === true ? "blink_green" : ""} ${row.smallerPrice ? "blink_red" : ""}`}
+                    className={`${row.biggerPrice ? "blink_green" : ""} ${row.smallerPrice ? "blink_red" : ""}`}
                     // className={row.biggerPrice ? "blink" : ""}
                   >
                     {/* <TableCell padding="checkbox">
