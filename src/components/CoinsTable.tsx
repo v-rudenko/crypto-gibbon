@@ -20,25 +20,34 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
+// import styled from "@mui/material/styles/styled";
+// import { green } from "@mui/material/colors";
 
 interface Data {
-  id: number;
+  id: string | number;
   price: number;
   marketCap: number;
   change: number;
   title: string;
   vwap: number;
   rank: number;
+
+  biggerPrice?: boolean;
+  smallerPrice?: boolean;
 }
 
 function createData(
-  id: number,
+  id: string | number,
   title: string,
   price: number,
   change: number,
   marketCap: number,
   vwap: number,
-  rank: number
+  rank: number,
+
+  biggerPrice?: boolean,
+  smallerPrice?: boolean,
+
 ): Data {
   return {
     id,
@@ -48,9 +57,10 @@ function createData(
     marketCap,
     vwap,
     rank,
+    biggerPrice,
+    smallerPrice,
   };
 }
-
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -104,14 +114,14 @@ interface HeadCell {
 
 const headCells: readonly HeadCell[] = [
   {
-    id: 'rank',
+    id: "rank",
     numeric: true,
     disablePadding: true,
-    label: 'Rank',
+    label: "Rank",
   },
   {
     id: "title",
-    numeric: false,
+    numeric: true,
     disablePadding: false,
     label: "Title",
   },
@@ -181,27 +191,35 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             }}
           />
         </TableCell> */}
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
+        <TableCell>
+          <span>Rank</span>
+        </TableCell>
+        {headCells.map(
+          (headCell) =>
+            headCell.id !== "rank" && ( // Тимчасове рішення, аби зробити кращий padding.
+              <TableCell
+                key={headCell.id}
+                align={headCell.numeric ? "right" : "left"}
+                padding={headCell.disablePadding ? "none" : "normal"}
+                sortDirection={orderBy === headCell.id ? order : false}
+              >
+                <TableSortLabel
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : "asc"}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy === headCell.id ? (
+                    <Box component="span" sx={visuallyHidden}>
+                      {order === "desc"
+                        ? "sorted descending"
+                        : "sorted ascending"}
+                    </Box>
+                  ) : null}
+                </TableSortLabel>
+              </TableCell>
+            )
+        )}
       </TableRow>
     </TableHead>
   );
@@ -266,6 +284,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 
 type Props = {
   coins: Array<Object>;
+  oldCoins: Array<Object>;
 };
 
 export default function EnhancedTable(props: Props) {
@@ -276,19 +295,37 @@ export default function EnhancedTable(props: Props) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(25); // Тимчасово змінив на 25, а було 5
 
-  const rows = props.coins.map((coin: any) => {
-    // console.log(coin)
-    if (coin.priceUsd >= 1) {
-      coin.priceUsd = parseFloat(coin.priceUsd).toFixed(2);
-    } else {
-      coin.priceUsd = parseFloat(coin.priceUsd).toFixed(5);
-    }
 
-    coin.marketCapUsd = parseFloat(coin.marketCapUsd).toFixed(2);
-    coin.vwap24Hr = parseFloat(coin.vwap24Hr).toFixed(2);
-    coin.changePercent24Hr = parseFloat(coin.changePercent24Hr).toFixed(2);
-    coin.priceUsd = parseFloat(coin.priceUsd);
-    coin.rank = parseInt(coin.rank);
+  const rows = props.coins.map((coin: any) => {
+
+    const oldCoin = props.oldCoins.filter((oldCoin: any) => oldCoin.id === coin.id)[0];
+
+    if (oldCoin) {
+      if (parseFloat(oldCoin.priceUsd) < parseFloat(coin.priceUsd)) {
+        // console.log(coin.name + "подорожчав");
+        coin.biggerPrice = true;
+      } else if (parseFloat(oldCoin.priceUsd) > parseFloat(coin.priceUsd)) {
+        coin.biggerPrice = false;
+        coin.smallerPrice = true;
+      } else {
+        coin.biggerPrice = false;
+        coin.smallerPrice = false;
+      }
+    }
+    // coin.priceUsd = 1;
+
+    // console.log(coin)
+    // if (coin.priceUsd >= 1) {
+    //   coin.priceUsd = parseFloat(coin.priceUsd).toFixed(2);
+    // } else {
+    //   coin.priceUsd = parseFloat(coin.priceUsd).toFixed(5);
+    // }
+
+    // coin.marketCapUsd = parseFloat(coin.marketCapUsd).toFixed(2);
+    // coin.vwap24Hr = parseFloat(coin.vwap24Hr).toFixed(2);
+    // coin.changePercent24Hr = parseFloat(coin.changePercent24Hr).toFixed(2);
+    // coin.priceUsd = parseFloat(coin.priceUsd);
+    // coin.rank = parseInt(coin.rank);
 
     return createData(
       coin.rank,
@@ -297,11 +334,13 @@ export default function EnhancedTable(props: Props) {
       coin.changePercent24Hr,
       coin.marketCapUsd,
       coin.vwap24Hr,
-      coin.rank
+      coin.rank,
+      coin.biggerPrice,
+      coin.smallerPrice,
     );
   });
 
-  console.log(props.coins);
+  // console.log(props.coins);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -403,6 +442,8 @@ export default function EnhancedTable(props: Props) {
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: "pointer" }}
+                    className={`${row.biggerPrice === true ? "blink_green" : ""} ${row.smallerPrice ? "blink_red" : ""}`}
+                    // className={row.biggerPrice ? "blink" : ""}
                   >
                     {/* <TableCell padding="checkbox">
                       <Checkbox
@@ -413,15 +454,15 @@ export default function EnhancedTable(props: Props) {
                         }}
                       />
                     </TableCell> */}
-                    <TableCell align="right">{row.rank}</TableCell>
                     <TableCell
                       component="th"
                       id={labelId}
                       scope="row"
-                      padding="none"
+                      padding="normal"
                     >
-                      {row.title}
+                      {row.rank}
                     </TableCell>
+                    <TableCell align="right">{row.title}</TableCell>
                     <TableCell align="right">{row.price} $</TableCell>
                     {/* <TableCell align="right">{row.price}</TableCell> */}
                     <TableCell align="right">{row.marketCap}</TableCell>

@@ -1,0 +1,37 @@
+.biggerPrice {
+  background-color: green;
+}
+
+.blink_green {
+  animation: blink_green 1s;
+  /* background-color: green; */
+}
+
+@keyframes blink_green {
+  0% {
+    background-color: rgb(27, 174, 27);
+  }
+  50% {
+    background-color: rgb(17, 138, 45);
+  }
+  100% {
+    background-color: inherit;
+  }
+}
+
+.blink_red {
+  animation: blink_red 1s;
+  /* background-color: red; */
+}
+
+@keyframes blink_red {
+  0% {
+    background-color: rgba(180, 11, 11);
+  }
+  50% {
+    background-color: rgba(145, 18, 18);
+  }
+  100% {
+    background-color: inherit;
+  }
+}
