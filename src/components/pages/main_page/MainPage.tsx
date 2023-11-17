@@ -41,8 +41,15 @@ const shuffle = (array: any) => {
     ];
   }
   return array;
-}
+};
 
+function formatCompactNumber(number: number) {
+  const formatter = Intl.NumberFormat("en", {
+    notation: "compact",
+    maximumFractionDigits: 2,
+  });
+  return formatter.format(number);
+}
 
 const MainPage = () => {
   const [coins, setCoins] = useState([]);
@@ -57,10 +64,20 @@ const MainPage = () => {
       data.forEach((element: Data) => {
         element.priceUsd = parseFloat(element.priceUsd.slice(0, 8));
         element.rank = parseFloat(element.rank);
+        element.changePercent24Hr = parseFloat(
+          element.changePercent24Hr.slice(0, 4)
+        );
+        element.marketCapUsd = formatCompactNumber(
+          parseFloat(element.marketCapUsd)
+        );
+        if (!element.vwap24Hr) {
+          element.vwap24Hr = "-";
+        } else {
+          element.vwap24Hr = parseFloat(element.vwap24Hr.slice(0, 8));
+        }
       });
       setUpdatedCoins(data);
-      // setOldCoins(data);
-      // console.log(updatedCoins);
+      // console.log(data.map((el: Data) => el.symbol.toLowerCase()));
     };
     fetchData();
   }, []);
@@ -75,16 +92,6 @@ const MainPage = () => {
         const updatedData = updatedCoins.map((el) => ({ ...el }));
         const updatedIds = new Set();
 
-
-        // console.log(data);
-        // data.forEach((element: Data) => {
-        //   element.priceUsd = parseFloat(element.priceUsd.slice(0, 8));
-        //   element.rank = parseFloat(element.rank);
-        // }
-        // );
-        
-
-
         for (let i = 0; i < 20 && i < shuffledData.length; i++) {
           // data[i].priceUsd = parseFloat(data[i].priceUsd.slice(0, 8));
           // data[i].rank = parseFloat(data[i].rank);
@@ -94,17 +101,30 @@ const MainPage = () => {
 
           if (!updatedIds.has(randomElement.id)) {
             updatedIds.add(randomElement.id);
-            const indexToUpdate = updatedData.findIndex((el) => el.id === randomElement.id);
+            const indexToUpdate = updatedData.findIndex(
+              (el) => el.id === randomElement.id
+            );
             if (indexToUpdate !== -1) {
-              const updatedPriceUsd = parseFloat(randomElement.priceUsd.slice(0, 8));
+              const updatedPriceUsd = parseFloat(
+                randomElement.priceUsd.slice(0, 8)
+              );
               const prevPriceUsd = updatedData[indexToUpdate].priceUsd;
 
               updatedData[indexToUpdate] = {
                 ...randomElement,
                 priceUsd: parseFloat(randomElement.priceUsd.slice(0, 8)),
                 rank: parseFloat(randomElement.rank),
+                changePercent24Hr: parseFloat(
+                  randomElement.changePercent24Hr.slice(0, 4)
+                ),
                 biggerPrice: updatedPriceUsd > prevPriceUsd,
                 smallerPrice: updatedPriceUsd < prevPriceUsd,
+                marketCapUsd: formatCompactNumber(
+                  parseFloat(randomElement.marketCapUsd)
+                ),
+                vwap24Hr: randomElement.vwap24Hr
+                  ? parseFloat(randomElement.vwap24Hr.slice(0, 8))
+                  : "-",
               };
             }
           }
@@ -117,7 +137,6 @@ const MainPage = () => {
     }, 2000);
     return () => clearInterval(interval);
   }, [updatedCoins]);
-
 
   return (
     <Box sx={{ width: "70vw" }}>

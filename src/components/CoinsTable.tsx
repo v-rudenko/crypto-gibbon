@@ -465,9 +465,9 @@ export default function EnhancedTable(props: Props) {
                     <TableCell align="right">{row.title}</TableCell>
                     <TableCell align="right">{row.price} $</TableCell>
                     {/* <TableCell align="right">{row.price}</TableCell> */}
-                    <TableCell align="right">{row.marketCap}</TableCell>
-                    <TableCell align="right">{row.vwap}</TableCell>
-                    <TableCell align="right">{row.change} %</TableCell>
+                    <TableCell align="right">{row.marketCap} $</TableCell>
+                    <TableCell align="right">{row.vwap} $</TableCell>
+                    <TableCell className={parseFloat(row.change) < 0 ? "red_change" : "green_change"} align="right"><span>{row.change} %</span></TableCell>
                   </TableRow>
                 );
               })}

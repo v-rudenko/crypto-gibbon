@@ -1,4 +1,4 @@
-import './App.css'
+import './App.scss'
 import MainPage from './components/pages/main_page/MainPage'
 
 function App() {
