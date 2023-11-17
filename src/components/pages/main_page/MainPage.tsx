@@ -27,21 +27,22 @@ type Data = {
   smallerPrice: boolean;
 };
 
-// const shuffle = (array: any) => {
-//   let currentIndex = array.length,
-//     randomIndex;
+const shuffle = (array: any) => {
+  let currentIndex = array.length,
+    randomIndex;
 
-//   while (currentIndex != 0) {
-//     randomIndex = Math.floor(Math.random() * currentIndex);
-//     currentIndex--;
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
 
-//     [array[currentIndex], array[randomIndex]] = [
-//       array[randomIndex],
-//       array[currentIndex],
-//     ];
-//   }
-//   return array;
-// }
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+  return array;
+}
+
 
 const MainPage = () => {
   const [coins, setCoins] = useState([]);
@@ -66,43 +67,57 @@ const MainPage = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const UpdateData = async () => {
+      const updateRandomData = async () => {
         const result = await axios.get(API);
-        const data = result.data.data;
+        // const data = result.data.data;
+        const shuffledData = shuffle(result.data.data);
 
-        for (let i = 0; i < data.length; i++) {
-          data[i].priceUsd = parseFloat(data[i].priceUsd.slice(0, 8));
-          data[i].rank = parseFloat(data[i].rank);
+        const updatedData = updatedCoins.map((el) => ({ ...el }));
+        const updatedIds = new Set();
 
-          if (
-            parseFloat(data[i].priceUsd) > parseFloat(updatedCoins[i].priceUsd)
-          ) {
-            // data[i].biggerPrice = true;
-            // data[i].smallerPrice = false;
-            data[i].biggerPrice = true;
-            data[i].smallerPrice = false;
 
-            // console.log(data[i]);
-          } else if (
-            parseFloat(data[i].priceUsd) < parseFloat(updatedCoins[i].priceUsd)
-          ) {
-            data[i].biggerPrice = false;
-            data[i].smallerPrice = true;
-          } else {
-            data[i].biggerPrice = updatedCoins[i].biggerPrice;
-            data[i].smallerPrice = updatedCoins[i].smallerPrice;
-          }
-
-        }
-        setUpdatedCoins(data);
+        // console.log(data);
+        // data.forEach((element: Data) => {
+        //   element.priceUsd = parseFloat(element.priceUsd.slice(0, 8));
+        //   element.rank = parseFloat(element.rank);
         // }
+        // );
+        
 
-        // setUpdatedCoins(data);
+
+        for (let i = 0; i < 20 && i < shuffledData.length; i++) {
+          // data[i].priceUsd = parseFloat(data[i].priceUsd.slice(0, 8));
+          // data[i].rank = parseFloat(data[i].rank);
+
+          const randomIndex = Math.floor(Math.random() * shuffledData.length);
+          const randomElement = shuffledData[randomIndex];
+
+          if (!updatedIds.has(randomElement.id)) {
+            updatedIds.add(randomElement.id);
+            const indexToUpdate = updatedData.findIndex((el) => el.id === randomElement.id);
+            if (indexToUpdate !== -1) {
+              const updatedPriceUsd = parseFloat(randomElement.priceUsd.slice(0, 8));
+              const prevPriceUsd = updatedData[indexToUpdate].priceUsd;
+
+              updatedData[indexToUpdate] = {
+                ...randomElement,
+                priceUsd: parseFloat(randomElement.priceUsd.slice(0, 8)),
+                rank: parseFloat(randomElement.rank),
+                biggerPrice: updatedPriceUsd > prevPriceUsd,
+                smallerPrice: updatedPriceUsd < prevPriceUsd,
+              };
+            }
+          }
+        }
+
+        setUpdatedCoins(updatedData);
       };
-      UpdateData();
+
+      updateRandomData();
     }, 2000);
     return () => clearInterval(interval);
   }, [updatedCoins]);
+
 
   return (
     <Box sx={{ width: "70vw" }}>

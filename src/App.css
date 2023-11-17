@@ -3,35 +3,36 @@
 }
 
 .blink_green {
-  /* animation: blink_green 1s; */
-  background-color: #6fbf7392;
+  animation: blink_green 1.5s;
+  /* background-color: #6fbf7392; */
 }
 
-/* @keyframes blink_green {
+@keyframes blink_green {
   0% {
-    background-color: rgb(27, 174, 27);
+    background-color: rgba(24, 198, 131, 0.19);
   }
   50% {
-    background-color: rgb(17, 138, 45);
+    background-color: rgba(24, 198, 131, 0.19);
   }
   100% {
     background-color: inherit;
   }
-} */
+}
 
 .blink_red {
-  /* animation: blink_red 1s; */
-  background-color: #ff456a79;
+  animation: blink_red 1.5s;
+  /* background-color: #ff456a79; */
 }
 
-/* @keyframes blink_red {
+@keyframes blink_red {
   0% {
-    background-color: rgba(180, 11, 11);
+    /* background-color: rgba(180, 11, 11); */
+    background-color: rgba(244, 67, 54, 0.19);
   }
   50% {
-    background-color: rgba(145, 18, 18);
+    background-color: rgba(244, 67, 54, 0.19);
   }
   100% {
     background-color: inherit;
   }
-} */
+}
