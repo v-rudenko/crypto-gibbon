@@ -23,6 +23,8 @@ import { visuallyHidden } from "@mui/utils";
 // import styled from "@mui/material/styles/styled";
 // import { green } from "@mui/material/colors";
 
+import icon from "../components/mainTable/icons/atom.png";
+
 interface Data {
   id: string | number;
   price: number;
@@ -116,13 +118,13 @@ const headCells: readonly HeadCell[] = [
   {
     id: "rank",
     numeric: true,
-    disablePadding: true,
+    disablePadding: false,
     label: "Rank",
   },
   {
     id: "title",
-    numeric: true,
-    disablePadding: false,
+    numeric: false,
+    disablePadding: true,
     label: "Title",
   },
   {
@@ -191,15 +193,17 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             }}
           />
         </TableCell> */}
-        <TableCell>
+        {/* <TableCell>
           <span>Rank</span>
-        </TableCell>
+        </TableCell> */}
         {headCells.map(
           (headCell) =>
-            headCell.id !== "rank" && ( // Тимчасове рішення, аби зробити кращий padding.
+            // headCell.id !== "title" && ( // Тимчасове рішення, аби зробити кращий padding.
+
               <TableCell
                 key={headCell.id}
-                align={headCell.numeric ? "right" : "left"}
+                // align={headCell.numeric ? "right" : "left"}
+                align={headCell.id === "rank" ? "center" : headCell.numeric ? "right" : "left"}
                 padding={headCell.disablePadding ? "none" : "normal"}
                 sortDirection={orderBy === headCell.id ? order : false}
               >
@@ -219,7 +223,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                 </TableSortLabel>
               </TableCell>
             )
-        )}
+        }
       </TableRow>
     </TableHead>
   );
@@ -458,11 +462,14 @@ export default function EnhancedTable(props: Props) {
                       component="th"
                       id={labelId}
                       scope="row"
-                      padding="normal"
+                      padding="none"
+                      align="center"
+
                     >
                       {row.rank}
                     </TableCell>
-                    <TableCell align="right">{row.title}</TableCell>
+                    {/* <TableCell padding="none" align="right">{row.title}</TableCell> */}
+                    <TableCell padding="none" align="left"><Box><img src="" alt="" style={{width: "30px"}} />{row.title}</Box></TableCell>
                     <TableCell align="right">{row.price} $</TableCell>
                     {/* <TableCell align="right">{row.price}</TableCell> */}
                     <TableCell align="right">{row.marketCap} $</TableCell>
