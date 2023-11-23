@@ -20,12 +20,16 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
+
+
+import Icon from "./common/Icon";
+import CoinNameLayout from "./common/CoinNameLayout";
 // import styled from "@mui/material/styles/styled";
 // import { green } from "@mui/material/colors";
 
-import icon from "../components/mainTable/icons/atom.png";
+// import icon from "../components/mainTable/icons/atom.png";
 
-interface Data {
+export interface Data {
   id: string | number;
   price: number;
   marketCap: number;
@@ -36,6 +40,7 @@ interface Data {
 
   biggerPrice?: boolean;
   smallerPrice?: boolean;
+  symbol?: string;
 }
 
 function createData(
@@ -49,6 +54,7 @@ function createData(
 
   biggerPrice?: boolean,
   smallerPrice?: boolean,
+  symbol?: string,
 
 ): Data {
   return {
@@ -61,6 +67,7 @@ function createData(
     rank,
     biggerPrice,
     smallerPrice,
+    symbol,
   };
 }
 
@@ -302,21 +309,12 @@ export default function EnhancedTable(props: Props) {
 
   const rows = props.updatedCoins.map((coin: any) => {
 
+    // console.log(coin.symbol.toLowerCase());
 
-    // coin.priceUsd = 1;
+    // console.log(new URL(`/icons/${coin.symbol.toLowerCase()}.png`, import.meta.url).href);
 
-    // console.log(coin)
-    // if (coin.priceUsd >= 1) {
-    //   coin.priceUsd = parseFloat(coin.priceUsd).toFixed(2);
-    // } else {
-    //   coin.priceUsd = parseFloat(coin.priceUsd).toFixed(5);
-    // }
 
-    // coin.marketCapUsd = parseFloat(coin.marketCapUsd).toFixed(2);
-    // coin.vwap24Hr = parseFloat(coin.vwap24Hr).toFixed(2);
-    // coin.changePercent24Hr = parseFloat(coin.changePercent24Hr).toFixed(2);
-    // coin.priceUsd = parseFloat(coin.priceUsd);
-    // coin.rank = parseInt(coin.rank);
+
 
     return createData(
       coin.rank,
@@ -328,6 +326,7 @@ export default function EnhancedTable(props: Props) {
       coin.rank,
       coin.biggerPrice,
       coin.smallerPrice,
+      coin.symbol,
     );
 
 
@@ -413,6 +412,7 @@ export default function EnhancedTable(props: Props) {
     [order, orderBy, page, rowsPerPage, rows]
   );
 
+
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -435,6 +435,8 @@ export default function EnhancedTable(props: Props) {
               {visibleRows.map((row, index) => {
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
+
+                // console.log(row);
 
                 return (
                   <TableRow
@@ -469,7 +471,7 @@ export default function EnhancedTable(props: Props) {
                       {row.rank}
                     </TableCell>
                     {/* <TableCell padding="none" align="right">{row.title}</TableCell> */}
-                    <TableCell padding="none" align="left"><Box><img src="" alt="" style={{width: "30px"}} />{row.title}</Box></TableCell>
+                    <TableCell padding="none" align="left"><Box><CoinNameLayout coin={row} /></Box></TableCell>
                     <TableCell align="right">{row.price} $</TableCell>
                     {/* <TableCell align="right">{row.price}</TableCell> */}
                     <TableCell align="right">{row.marketCap} $</TableCell>
