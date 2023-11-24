@@ -185,6 +185,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
+    // console.log(headCells);
 
   return (
     <TableHead>
@@ -208,7 +209,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             // headCell.id !== "title" && ( // Тимчасове рішення, аби зробити кращий padding.
 
               <TableCell
-                key={headCell.id}
+                key={headCells.indexOf(headCell)}
                 // align={headCell.numeric ? "right" : "left"}
                 align={headCell.id === "rank" ? "center" : headCell.numeric ? "right" : "left"}
                 padding={headCell.disablePadding ? "none" : "normal"}
@@ -307,7 +308,7 @@ export default function EnhancedTable(props: Props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(25); // Тимчасово змінив на 25, а було 5
 
 
-  const rows = props.updatedCoins.map((coin: any) => {
+  const rows: any = props.updatedCoins.map((coin: any) => {
 
     // console.log(coin.symbol.toLowerCase());
 
@@ -356,7 +357,7 @@ export default function EnhancedTable(props: Props) {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = rows.map((n: any) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -432,7 +433,8 @@ export default function EnhancedTable(props: Props) {
               rowCount={rows.length}
             />
             <TableBody>
-              {visibleRows.map((row, index) => {
+              {visibleRows.map((row: any, index) => {
+                console.log(row);
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -445,7 +447,7 @@ export default function EnhancedTable(props: Props) {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.id}
+                    key={rows.indexOf(row)}
                     selected={isItemSelected}
                     sx={{ cursor: "pointer" }}
                     className={`${row.biggerPrice ? "blink_green" : ""} ${row.smallerPrice ? "blink_red" : ""}`}
@@ -476,7 +478,7 @@ export default function EnhancedTable(props: Props) {
                     {/* <TableCell align="right">{row.price}</TableCell> */}
                     <TableCell align="right">{row.marketCap} $</TableCell>
                     <TableCell align="right">{row.vwap} $</TableCell>
-                    <TableCell className={parseFloat(row.change) < 0 ? "red_change" : "green_change"} align="right"><span>{row.change} %</span></TableCell>
+                    <TableCell className={row.change < 0 ? "red_change" : "green_change"} align="right"><span>{row.change} %</span></TableCell>
                   </TableRow>
                 );
               })}
