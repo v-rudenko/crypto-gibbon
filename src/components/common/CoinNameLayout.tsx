@@ -6,7 +6,7 @@ import defaultIcon from "../../../public/icons/btc.png"
 
 type Props = {
   coin: Data;
-  title: string;
+  // title: string;
 };
 
 const CoinNameLayout = (props: Props) => {
