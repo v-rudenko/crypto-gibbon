@@ -7,27 +7,11 @@ import CoinsTable from "../../CoinsTable";
 
 import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
+import { Coin } from "../../../types/coins";
 
 const API = "https://api.coincap.io/v2/assets";
 
-type Data = {
-  id: string;
-  rank: string | number;
-  symbol: string;
-  name: string;
-  supply: string;
-  maxSupply: string;
-  marketCapUsd: string;
-  volumeUsd24Hr: string;
-  priceUsd: number;
-  changePercent24Hr: string;
-  vwap24Hr: string;
-  explorer: string;
-  biggerPrice: boolean;
-  smallerPrice: boolean;
-};
-
-const shuffle = (array: any) => {
+const shuffle = (array: Array<any>) => {
   let currentIndex = array.length,
     randomIndex;
 
@@ -52,32 +36,28 @@ function formatCompactNumber(number: number) {
 }
 
 const MainPage = () => {
-  const [coins, setCoins] = useState([]);
-  const [updatedCoins, setUpdatedCoins] = useState([]);
-  // const [biggerPrice, setBiggerPrice] = useState(false);
-  // const [smallerPrice, setSmallerPrice] = useState(false);
+  const [updatedCoins, setUpdatedCoins] = useState<Array<Coin>>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios.get(API);
       const data = result.data.data;
-      data.forEach((element: Data) => {
-        element.priceUsd = parseFloat(element.priceUsd.slice(0, 8));
-        element.rank = parseFloat(element.rank);
+      data.forEach((element: Coin) => {
+        element.priceUsd = parseFloat(element.priceUsd.toString().slice(0, 8));
+        element.rank = parseFloat(element.rank.toString());
         element.changePercent24Hr = parseFloat(
-          element.changePercent24Hr.slice(0, 4)
+          element.changePercent24Hr.toString().slice(0, 4)
         );
-        element.marketCapUsd = formatCompactNumber(
-          parseFloat(element.marketCapUsd)
+        element.marketCapUsd = +formatCompactNumber(
+          parseFloat(element.marketCapUsd.toString())
         );
         if (!element.vwap24Hr) {
           element.vwap24Hr = "-";
         } else {
-          element.vwap24Hr = parseFloat(element.vwap24Hr.slice(0, 8));
+          element.vwap24Hr = parseFloat(element.vwap24Hr.toString().slice(0, 8));
         }
       });
       setUpdatedCoins(data);
-      // console.log(data.map((el: Data) => el.symbol.toLowerCase()));
     };
     fetchData();
   }, []);
@@ -89,7 +69,7 @@ const MainPage = () => {
         // const data = result.data.data;
         const shuffledData = shuffle(result.data.data);
 
-        const updatedData = updatedCoins.map((el) => ({ ...el }));
+        const updatedData = updatedCoins.map((el: Coin) => ({ ...el }));
         const updatedIds = new Set();
 
         for (let i = 0; i < 20 && i < shuffledData.length; i++) {
@@ -129,7 +109,6 @@ const MainPage = () => {
             }
           }
         }
-
         setUpdatedCoins(updatedData);
       };
 
@@ -140,7 +119,7 @@ const MainPage = () => {
 
   return (
     <Box sx={{ width: "70vw" }}>
-      <CoinsTable coins={coins} updatedCoins={updatedCoins} />
+      <CoinsTable updatedCoins={updatedCoins} />
     </Box>
   );
 };

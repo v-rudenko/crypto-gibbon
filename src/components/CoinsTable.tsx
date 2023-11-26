@@ -24,6 +24,8 @@ import { visuallyHidden } from "@mui/utils";
 
 import Icon from "./common/Icon";
 import CoinNameLayout from "./common/CoinNameLayout";
+
+import { Coin } from "../types/coins";
 // import styled from "@mui/material/styles/styled";
 // import { green } from "@mui/material/colors";
 
@@ -35,7 +37,7 @@ export interface Data {
   marketCap: number;
   change: number;
   title: string;
-  vwap: number;
+  vwap: number | string;
   rank: number;
 
   biggerPrice?: boolean;
@@ -49,7 +51,7 @@ function createData(
   price: number,
   change: number,
   marketCap: number,
-  vwap: number,
+  vwap: number | string,
   rank: number,
 
   biggerPrice?: boolean,
@@ -125,7 +127,7 @@ const headCells: readonly HeadCell[] = [
   {
     id: "rank",
     numeric: true,
-    disablePadding: false,
+    disablePadding: true,
     label: "Rank",
   },
   {
@@ -295,8 +297,8 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 }
 
 type Props = {
-  coins: Array<Object>;
-  updatedCoins: Array<Object>;
+  // coins: Array<Object>;
+  updatedCoins: Array<Coin>;
 };
 
 export default function EnhancedTable(props: Props) {
@@ -307,15 +309,8 @@ export default function EnhancedTable(props: Props) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(25); // Тимчасово змінив на 25, а було 5
 
-
-  const rows: any = props.updatedCoins.map((coin: any) => {
-
-    // console.log(coin.symbol.toLowerCase());
-
-    // console.log(new URL(`/icons/${coin.symbol.toLowerCase()}.png`, import.meta.url).href);
-
-
-
+  //Тут тип any, бо я не зміг придумати як зробити без нього
+  const rows: any = props.updatedCoins.map((coin: Coin) => {
 
     return createData(
       coin.rank,
@@ -329,19 +324,6 @@ export default function EnhancedTable(props: Props) {
       coin.smallerPrice,
       coin.symbol,
     );
-
-
-    // return createData(
-    //   coin.rank,
-    //   coin.name,
-    //   coin.priceUsd,
-    //   coin.changePercent24Hr,
-    //   coin.marketCapUsd,
-    //   coin.vwap24Hr,
-    //   coin.rank,
-    //   coin.biggerPrice,
-    //   coin.smallerPrice,
-    // );
   });
 
   // console.log(props.coins);
@@ -434,7 +416,7 @@ export default function EnhancedTable(props: Props) {
             />
             <TableBody>
               {visibleRows.map((row: any, index) => {
-                console.log(row);
+                // console.log(row);
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
