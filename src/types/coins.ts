@@ -5,7 +5,7 @@ export type Coin = {
   name: string;
   supply: string;
   maxSupply: string;
-  marketCapUsd: number;
+  marketCapUsd: string;
   volumeUsd24Hr: string;
   priceUsd: number;
   changePercent24Hr: number;

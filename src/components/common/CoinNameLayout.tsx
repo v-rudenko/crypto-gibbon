@@ -20,7 +20,7 @@ const CoinNameLayout = (props: Props) => {
       ) : (
         <Icon src={defaultIcon} />
       )} */}
-      <Icon src={`/icons/${props.coin.symbol?.toLowerCase()}.png`} />
+      <Icon src={`./icons/${props.coin.symbol?.toLowerCase()}.png`} />
       <Box>{props.coin.title}</Box>
       <Box>{props.coin.symbol}</Box>
     </Box>

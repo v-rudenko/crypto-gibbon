@@ -25,7 +25,7 @@ const Icon = (props: Props) => {
     element.src = props.src;
     element.addEventListener("error", () => {
       console.log("error with image");
-      element.src = `/icons/btc.png`   // Просто заглушка
+      element.src = `./icons/btc.png`   // Просто заглушка
 
   }, { once: true });
 }

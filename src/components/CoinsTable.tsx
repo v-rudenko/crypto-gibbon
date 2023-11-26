@@ -34,7 +34,7 @@ import { Coin } from "../types/coins";
 export interface Data {
   id: string | number;
   price: number;
-  marketCap: number;
+  marketCap: string;
   change: number;
   title: string;
   vwap: number | string;
@@ -50,7 +50,7 @@ function createData(
   title: string,
   price: number,
   change: number,
-  marketCap: number,
+  marketCap: string,
   vwap: number | string,
   rank: number,
 

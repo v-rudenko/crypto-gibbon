@@ -48,7 +48,7 @@ const MainPage = () => {
         element.changePercent24Hr = parseFloat(
           element.changePercent24Hr.toString().slice(0, 4)
         );
-        element.marketCapUsd = +formatCompactNumber(
+        element.marketCapUsd = formatCompactNumber(
           parseFloat(element.marketCapUsd.toString())
         );
         if (!element.vwap24Hr) {
