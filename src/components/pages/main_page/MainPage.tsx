@@ -11,7 +11,7 @@ import { Coin } from "../../../types/coins";
 
 const API = "https://api.coincap.io/v2/assets";
 
-const shuffle = (array: Array<any>) => {
+const shuffle = (array: Coin[]) => {
   let currentIndex = array.length,
     randomIndex;
 
@@ -54,7 +54,9 @@ const MainPage = () => {
         if (!element.vwap24Hr) {
           element.vwap24Hr = "-";
         } else {
-          element.vwap24Hr = parseFloat(element.vwap24Hr.toString().slice(0, 8));
+          element.vwap24Hr = parseFloat(
+            element.vwap24Hr.toString().slice(0, 8)
+          );
         }
       });
       setUpdatedCoins(data);
@@ -86,16 +88,18 @@ const MainPage = () => {
             );
             if (indexToUpdate !== -1) {
               const updatedPriceUsd = parseFloat(
-                randomElement.priceUsd.slice(0, 8)
+                randomElement.priceUsd.toString().slice(0, 8)
               );
               const prevPriceUsd = updatedData[indexToUpdate].priceUsd;
 
               updatedData[indexToUpdate] = {
                 ...randomElement,
-                priceUsd: parseFloat(randomElement.priceUsd.slice(0, 8)),
-                rank: parseFloat(randomElement.rank),
+                priceUsd: parseFloat(
+                  randomElement.priceUsd.toString().slice(0, 8)
+                ),
+                rank: +randomElement.rank,
                 changePercent24Hr: parseFloat(
-                  randomElement.changePercent24Hr.slice(0, 4)
+                  randomElement.changePercent24Hr.toString().slice(0, 4)
                 ),
                 biggerPrice: updatedPriceUsd > prevPriceUsd,
                 smallerPrice: updatedPriceUsd < prevPriceUsd,
@@ -103,7 +107,7 @@ const MainPage = () => {
                   parseFloat(randomElement.marketCapUsd)
                 ),
                 vwap24Hr: randomElement.vwap24Hr
-                  ? parseFloat(randomElement.vwap24Hr.slice(0, 8))
+                  ? parseFloat(randomElement.vwap24Hr.toString().slice(0, 8))
                   : "-",
               };
             }
